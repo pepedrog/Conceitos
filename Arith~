@@ -1,0 +1,30 @@
+#lang plai-typed
+
+; Linguagem central, com nosso símbolos primitivos 
+(define-type ArithC
+  [numC (n : number)]
+  [plusC (l : number)(r : number)]
+  [multC (l : number)(r : number)])
+
+; Interpretador da nossa linguagem central
+; Equivalente a transformar o código em código de máquina
+(define (interp [a ArithC]) : number
+  (type-case ArithC a
+    [numC (n) n]
+    [plusC (l r) (+ (interp l) (interp r))]
+    [multC (l r) (* (interp l) (interp r))]
+  ))
+
+; Parser que transforma a linguagem formal da linguagem (s-expression)
+; Em ArithC, que é nossa linguagem abstrata
+(define (parse [s : s-expression]) : ArithC
+  ;Vamos verificar o tipo do s
+  (cond
+    [(s-exp-number? s) (numC (s-exp->number s))] ; se número, só devolve o número
+    [(s-exp-list? s)                             ; se lista, temos que avaliar a expressão
+     (let ([sl (s-exp-list s)])
+       (case (s-exp->symbol (first sl))
+         [(+) (plusC (parse (second sl) (third sl)))]
+         [(*) (multC (parse (second sl) (third sl)))]
+         [else (error 'parse "invalid list input")]))]
+   [else (error 'parse "invalid input")]))

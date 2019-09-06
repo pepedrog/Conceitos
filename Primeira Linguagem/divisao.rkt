@@ -107,7 +107,7 @@
     [plusC (l r) (+ (interp l fds) (interp r fds))]
     [multC (l r) (* (interp l fds) (interp r fds))]
     [divC  (l r) (/ (interp l fds) (let ([denominador (interp r fds)])
-                                   (if (zero? denominador) denominador (error 'divC "divisão por 0"))))]
+                                   (if (zero? denominador) (error 'divC "divisão por 0") denominador)))]
     [ifC (c s n) (if (zero? (interp c fds)) (interp n fds) (interp s fds))]
     ))
 
@@ -119,7 +119,6 @@
                    [(equal? n (fdC-name (first fds))) (first fds)] ; achou!
                    [else (get-fundef n (rest fds))] ; procura no resto
                    )]))
-
 
 ; o parser precisa tratar de chamadas
 (define (parse [s : s-expression]) : ExprS
@@ -149,8 +148,8 @@
 						 (multC (appC 'fatorial (plusC (idC 'n) (numC -1))) 
 								(idC 'n))
 						 (numC 1))]
-                    [fdC 'narciso  'narciso (multC (idC 'narciso) (numC 1000))]
                     ))
 
-(interp (desugar (parse '(+ -1400 (call fatorial 7)))) biblioteca)
-(test (interp (desugar (parse '(call narciso (call fatorial 7)))) biblioteca) 5040000)
+(define (interpS [s : s-expression]) (interp (desugar (parse s)) biblioteca))
+
+(interpS (read))

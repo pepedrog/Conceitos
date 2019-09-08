@@ -1,5 +1,5 @@
 D [0-9]
-E [Ee][+-]?{D}+
+E [Ee][+-]?{D}+ 
 
 %{
 #include <math.h>
@@ -21,8 +21,9 @@ E [Ee][+-]?{D}+
 [-]		{ return SUB; }
 [*]		{ return MUL; }
 [/]		{ return DIV; }
+\w      { printf("aqui\n");yylval.val = yytext; return FUNC; }
+(fatorial)       { printf("aquii = %s\n", yytext);yylval.val = yytext; return FUNC; }
 
-.	{  fprintf(stderr, "Entrada ignorada\n-->%s\n", yytext); }
 
 %%
 

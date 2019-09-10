@@ -1,18 +1,17 @@
-tudo: mcalc divisao
-
-mcalc: mcalc.tab.o lex.yy.o main.o 
+tudo: pep linguagem
+pep: pep.tab.o lex.yy.o main.o 
 	gcc -o $@ $^  -lfl
 
-mcalc.tab.o: mcalc.y
-	bison -d mcalc.y
-	gcc -c mcalc.tab.c
+pep.tab.o: pep.y
+	bison -d pep.y
+	gcc -c pep.tab.c
 
-lex.yy.o: mcalc.l
-	flex mcalc.l
+lex.yy.o: pep.l
+	flex pep.l
 	gcc -c lex.yy.c
 
-divisao: divisao.rkt
+linguagem: linguagem.rkt
 	raco exe $<
 
 clean:
-	rm -f *.o lex.yy.c mcalc.tab.c mcalc.tab.h divisao *~
+	rm -f *.o lex.yy.c mcalc.tab.c mcalc.tab.h linguagem *~

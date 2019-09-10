@@ -107,7 +107,7 @@
     [plusC (l r) (+ (interp l fds) (interp r fds))]
     [multC (l r) (* (interp l fds) (interp r fds))]
     [divC  (l r) (/ (interp l fds) (let ([denominador (interp r fds)])
-                                   (if (zero? denominador) (error 'divC "divisão por 0") denominador)))]
+                                   (if (zero? denominador) (error 'divC "erro: divisão por 0") denominador)))]
     [ifC (c s n) (if (zero? (interp c fds)) (interp n fds) (interp s fds))]
     ))
 
@@ -148,8 +148,11 @@
 						 (multC (appC 'fatorial (plusC (idC 'n) (numC -1))) 
 								(idC 'n))
 						 (numC 1))]
+                    [fdC 'exp 'x (ifC  (idC 'x) 
+						 (multC (appC 'exp (plusC (idC 'x) (numC -1))) (numC 2.7182818284))
+						 (numC 1))] ; implementação bem simples e não elegante de e^x
+                    [fdC 'meio 'x (divC (idC 'x) (numC 2))]
                     ))
 
 (define (interpS [s : s-expression]) (interp (desugar (parse s)) biblioteca))
-
 (interpS (read))

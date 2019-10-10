@@ -1,9 +1,9 @@
 D [0-9]
-E [Ee][+-]?{D}+
-
+E [Ee][+-]?{D}+ 
+F [a-zA-Z][a-zA-Z0-9]*
 %{
 #include <math.h>
-#include "mcalc.tab.h"
+#include "pep.tab.h"
 
 %}
 
@@ -21,8 +21,10 @@ E [Ee][+-]?{D}+
 [-]		{ return SUB; }
 [*]		{ return MUL; }
 [/]		{ return DIV; }
-
-.	{  fprintf(stderr, "Entrada ignorada\n-->%s\n", yytext); }
+se      	{ return SE;  }
+entao   	{ return ENTAO; }
+senao   	{ return SENAO; }
+{F}     	{ yylval.val = yytext; return FUNC; } /* nome alfanumérico de função */
 
 %%
 
